@@ -1,0 +1,13 @@
+{
+  "name": "apo-skills-marketplace",
+  "owner": {
+    "name": "Abdurrahman Yildirim"
+  },
+  "plugins": [
+    {
+      "name": "apo-skills",
+      "source": "./",
+      "description": "Personal skills library"
+    }
+  ]
+}
