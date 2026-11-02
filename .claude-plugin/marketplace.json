@@ -5,7 +5,7 @@
   },
   "plugins": [
     {
-      "name": "apo-skills",
+      "name": "apo",
       "source": "./",
       "description": "Personal skills library"
     }

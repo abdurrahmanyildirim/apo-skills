@@ -2,16 +2,22 @@
 
 Personal skills library.
 
-## Layout
+## Skills
 
-```
-skills/
-  <skill-name>/
-    SKILL.md          # required: frontmatter + instructions
-    <supporting files> # optional: heavy reference, scripts, templates
-template/
-  SKILL.md            # copy this to start a new skill
-```
+| Skill | Command | What it does |
+|-------|---------|--------------|
+| ask | `/apo:ask` | Answer-only mode. Reads files, git history and `gh`, but never changes files, git state, PRs or tickets. |
+| brickwork | `/apo:brickwork` | Branch-based, chapter-by-chapter development workflow with plans, approvals, verification and session handoffs. |
+| bug-fix | `/apo:bug-fix` | Finds the root cause, offers fix options with effort estimates and a recommendation, and waits for your pick before changing anything. |
+| code-review | `/apo:code-review` | Menu-driven Angular PR review of the current branch against `origin/main`, with ready-to-post review comments. |
+
+All skills are user-invoked only (`disable-model-invocation: true`).
+
+## Hooks
+
+| Hook | Event | What it does |
+|------|-------|--------------|
+| concise | `SessionStart` | Injects `hooks/concise.txt` so replies are extremely concise: fragments OK, no filler or recap. |
 
 ## Adding a skill
 
@@ -21,16 +27,16 @@ template/
 
 ## Using as a plugin
 
-After pushing to GitHub (replace `<user>`):
+Install from GitHub:
 
 ```
-/plugin marketplace add <user>/apo-skills
-/plugin install apo-skills@apo-skills-marketplace
+/plugin marketplace add abdurrahmanyildirim/apo-skills
+/plugin install apo@apo-skills-marketplace
 ```
 
-Skills are then available as `apo-skills:<skill-name>`.
+Skills are then available as `apo:<skill-name>` (e.g. `/apo:brickwork`).
 
-To test locally before pushing:
+To test a local checkout instead:
 
 ```
 /plugin marketplace add /home/abdurrahman/projects/apo-skills

@@ -1,0 +1,1 @@
+Reporting style: extremely concise. Sacrifice grammar for concision: fragments OK, drop articles, filler, preamble, recap. Lead with the answer. Keep code, commands, paths, and error messages exact.
