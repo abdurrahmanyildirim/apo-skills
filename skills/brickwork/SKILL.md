@@ -61,14 +61,46 @@ Every session:
 ### B. Existing plan → Resume
 
 1. Summarize the destination and chapter statuses.
-2. Verify the latest handoff against actual files, `git status`, `git diff`, and brick contracts. Report discrepancies.
-3. Select the first unfinished chapter whose dependencies are satisfied. Never start a blocked chapter.
-4. If it is `in-progress`, report the recorded failure or interruption and inspect the actual state before proceeding.
-5. Present its goal, tasks, acceptance criteria, verification, UI test steps, and relevant open decisions.
-6. Ask for explicit implementation approval. Stop.
+2. Backfill commits: for each `done` chapter with `uncommitted` in the Chapters table, check `git log` and fill in the hash if the work was committed.
+3. Verify the latest handoff and the Change Map against reality. Report discrepancies.
+   - Uncommitted work: `git status --short` and `git diff` must match the files the map and handoff claim.
+   - Committed chapters: every file in the map must exist, and `git show --stat <hash>` for the recorded commit must include the chapter's files.
+   - Check brick contracts against the actual code.
+4. Select the first unfinished chapter whose dependencies are satisfied. Never start a blocked chapter.
+5. If it is `in-progress`, report the recorded failure or interruption and inspect the actual state before proceeding.
+6. Present its goal, tasks, acceptance criteria, verification, UI test steps, and relevant open decisions.
+7. Ask for explicit implementation approval. Stop.
 
 If all chapters are `done`, report completion and stop.
 
 ### C. Approved chapter → Implement
 
-Enter only after explicit approval
+Enter only after explicit approval of that chapter.
+
+1. Set the chapter's status to `in-progress` in the Chapters table (the single source of status). Save the plan file.
+2. Implement only the approved chapter's tasks. Do not touch other chapters' scope.
+   - Logic: `superpowers:test-driven-development` where appropriate.
+   - UI: replace the matching placeholder; it must work in the running app.
+3. If the plan is wrong or incomplete, **stop and report**. Do not silently deviate. Record any approved deviation under the chapter's `Deviations`.
+4. Verify every acceptance criterion with `superpowers:verification-before-completion`. Run the commands. Record command + result.
+5. For UI chapters, give the user the `How to test in UI` steps and wait for confirmation.
+6. Only after verification passes (and UI confirmation, if any), set the status to `done` and Commit to `uncommitted`.
+7. Update `## Change Map` (see below), then write the handoff (section D). Stop. Do not start the next chapter.
+
+If verification fails: keep `in-progress`, record the failure in the handoff, stop.
+
+**Change Map rules:**
+- Add or update a row for every file touched. Take the list from `git status --short` and `git diff --stat`, not from memory.
+- Redraw the brick graph if bricks were added, connected, or removed.
+- Mark temporary files (mocks, demo scaffolding) as `temporary`. The final chapter must clear every `temporary` row.
+- The map reflects the current state, not history. History lives in handoffs and git.
+- Do not duplicate state: chapter status and commit live only in the Chapters table.
+
+### D. Handoff (mandatory)
+
+Write at chapter end, on failure, or when interrupted. Add to the plan's `## Handoffs` section, **newest first**, using the template in `references/plan-template.md`.
+
+- Facts only: commands run and results. No "should work". Do not list files; point to the Change Map rows for the chapter.
+- Put anything that outlives this chapter into `## Decisions` (choices + why, gotchas) and `## Brick contracts`, not only in the handoff.
+- Do not commit unless the user asks.
+- Interrupted mid-chapter: status stays `in-progress`; the handoff states what is done, half-done, and untouched.
