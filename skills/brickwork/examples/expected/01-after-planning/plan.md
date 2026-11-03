@@ -2,6 +2,7 @@
 
 **Branch:** `feature/pricing-page`
 **Created:** 2026-11-03
+**Status:** `ready`
 **Destination:** `/pricing` shows three plan cards with a monthly/yearly toggle, fed by a service that can later switch from mock to API.
 
 ## Scope
@@ -10,10 +11,10 @@
 - Constraints: standalone components, signals, existing design tokens.
 
 ## Decisions
-| # | Decision | Why | Date |
-|---|----------|-----|------|
-| 1 | Yearly price = monthly × 12 × 0.8 | Product rule confirmed by user | 2026-11-03 |
-| 2 | Service returns `Plan[]` via signal | Matches existing services in repo | 2026-11-03 |
+| # | Decision | Why | Source | Date |
+|---|----------|-----|--------|------|
+| D1 | Yearly price = monthly × 12 × 0.8 | Product rule confirmed by user | – | 2026-11-03 |
+| D2 | Service returns `Plan[]` via signal | Matches existing services in repo | – | 2026-11-03 |
 
 ## Assumptions / Open questions
 - [ ] Currency fixed to EUR for now (assumption; revisit with API).
@@ -59,7 +60,6 @@ Commit: `–` (not done) · `uncommitted` (done, not committed) · short hash
 **How to test in UI:** `pnpm start`, open `/pricing` with devtools console open; see toggle placeholder and three card placeholders (Basic, Pro, Team); console has no errors.
 **Depends on:** –
 **Brick contracts:** `Plan`, `Billing`
-**Deviations:** none
 
 ### Chapter 2: PriceFormatPipe
 **Goal:** pipe formats prices per billing period.
@@ -72,7 +72,6 @@ Commit: `–` (not done) · `uncommitted` (done, not committed) · short hash
 **Verification:** `pnpm test --include price-format`, `pnpm lint`
 **Depends on:** 1
 **Brick contracts:** `PriceFormatPipe`
-**Deviations:** none
 
 ### Chapter 3: PriceCardComponent
 **Goal:** real card replaces the card placeholders.
@@ -86,7 +85,6 @@ Commit: `–` (not done) · `uncommitted` (done, not committed) · short hash
 **How to test in UI:** `/pricing`; cards show name, price, features, CTA; clicking CTA logs/handles `select`.
 **Depends on:** 2
 **Brick contracts:** `PriceCardComponent`
-**Deviations:** none
 
 ### Chapter 4: BillingToggleComponent
 **Goal:** real toggle replaces its placeholder; page holds a `billing` signal.
@@ -99,7 +97,6 @@ Commit: `–` (not done) · `uncommitted` (done, not committed) · short hash
 **How to test in UI:** `/pricing`; click Yearly; all prices change; click Monthly; they revert.
 **Depends on:** 1
 **Brick contracts:** `BillingToggleComponent`
-**Deviations:** none
 
 ### Chapter 5: PricingService + integrate
 **Goal:** page reads plans from the service (still mock-backed).
@@ -113,7 +110,6 @@ Commit: `–` (not done) · `uncommitted` (done, not committed) · short hash
 **How to test in UI:** `/pricing` looks and behaves as after chapter 4.
 **Depends on:** 3, 4
 **Brick contracts:** `PricingService`
-**Deviations:** none
 
 ### Chapter 6: Cleanup
 **Goal:** no demo scaffolding left.
@@ -125,7 +121,6 @@ Commit: `–` (not done) · `uncommitted` (done, not committed) · short hash
 - No `[Plan card` / `[Billing toggle]` strings in `src/`
 **Verification:** `grep -r "\[Plan card\|\[Billing toggle" src/` returns nothing, `pnpm build`, `pnpm test`, `pnpm lint`
 **Depends on:** 5
-**Deviations:** none
 
 ## Change Map
 
@@ -138,5 +133,3 @@ Nothing implemented yet.
 ### Files
 | File | Brick | Status | Chapter | Purpose |
 |------|-------|--------|---------|---------|
-
-## Handoffs
