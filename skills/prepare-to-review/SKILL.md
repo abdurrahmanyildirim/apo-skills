@@ -11,14 +11,18 @@ Last check before opening or updating a PR. Fix leftovers automatically. Do not 
 ## Scope
 
 1. `git fetch origin main`, then collect the change set: `git diff origin/main...HEAD` plus uncommitted changes.
-2. Only touch lines and symbols this PR added or changed. Report pre-existing problems instead of fixing them.
+2. Only touch lines and symbols this PR added or changed, plus symbols orphaned by this PR's deletions (see Dead code), even in unchanged files. Report other pre-existing problems instead of fixing them.
 
 ## Checks
 
 Fix each finding directly.
 
 1. **Debug leftovers** in added lines: logging, `debugger`, commented-out code, PR-added TODOs, focused/skipped tests, temporary files, hardcoded test values.
-2. **Dead code** made unused by this PR, or added but never used: imports, variables, methods, inputs/outputs, components, styles, translation keys, files. Search the whole repo (templates, specs, stories, string references) before each deletion. If unsure, keep it and report.
+2. **Dead code** made unused by this PR, or added but never used: imports, variables, methods, inputs/outputs, components, styles, translation keys, files.
+   - Added code: grep each new symbol; no usage outside its own definition and specs means remove it.
+   - Deleted code: for every function, method, property, or file the diff deletes, list what it referenced (read the `-` lines). Grep each referenced symbol repo-wide (templates, stories, string references included), excluding its own definition and specs. Zero external hits means it is now dead, even in an unchanged file: remove it. Repeat for what the removed symbol referenced, until nothing new turns up.
+   - A hit inside the symbol's own definition never counts as a usage.
+   - If unsure (dynamic or string-based references), keep it and report.
 3. **Specs and stories** that the PR changed or added:
    - Remove casts (`as`, `any`, `!`) by fixing the types or mocks. Keep one only when no sound alternative exists, with a one-line comment why.
    - Fix tests that cannot fail, lack assertions, or assert implementation instead of behavior.
@@ -32,7 +36,7 @@ Run lint, type-check/build, and affected tests (scripts in `package.json`). Fix 
 
 Last step. Do not fix anything here. The developer decides.
 
-1. Find the project's Angular skills: `.agents/skills/*angular*/SKILL.md`, `.claude/skills/*angular*/SKILL.md`. Read only the references matching what the diff touches (components, inputs/outputs, signals, effects, forms, DI, routing, HTTP, styling, testing, naming). Other project skills (stories, widgets) count when the diff touches that area. If none exist, skip the guideline part and say so.
+1. Find the project's Angular skills: `.claude/skills/*angular*/SKILL.md`. Read only the references matching what the diff touches (components, inputs/outputs, signals, effects, forms, DI, routing, HTTP, styling, testing, naming). Other project skills (stories, widgets) count when the diff touches that area. If none exist, skip the guideline part and say so.
 2. Read the diff as a reviewer. For each changed behavior, hunt for forgotten cases and guideline deviations:
    - Inputs: null/undefined, empty, single item, very large, duplicates, unexpected order, invalid or partial data.
    - Async and state: loading, error, retry, race or out-of-order responses, rapid repeated actions, stale state, cleanup on destroy.
