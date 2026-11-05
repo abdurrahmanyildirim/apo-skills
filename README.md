@@ -10,6 +10,7 @@ Personal skills library.
 | brickwork | `/apo:brickwork` | Branch-based, chapter-by-chapter development workflow with plans, approvals, verification and session handoffs. |
 | bug-fix | `/apo:bug-fix` | Finds the root cause, offers fix options with effort estimates and a recommendation, and waits for your pick before changing anything. |
 | code-review | `/apo:code-review` | Menu-driven Angular PR review of the current branch against `origin/main`, with ready-to-post review comments. |
+| prepare-to-review | `/apo:prepare-to-review` | Final pass before opening or updating a PR. Auto-fixes leftovers in the diff against `origin/main` (debug code, dead code, casts and weak tests), runs lint, build and the sibling specs of changed files, then lists warnings for you to decide. Never commits or pushes. |
 
 All skills are user-invoked only (`disable-model-invocation: true`).
 

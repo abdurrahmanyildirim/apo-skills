@@ -32,6 +32,8 @@ Fix each finding directly.
 
 Run lint, type-check/build, and affected tests (scripts in `package.json`). Fix failures caused by this PR or your edits. Never weaken or skip a test to pass.
 
+Affected tests = at minimum the sibling spec of every changed non-spec file (`foo.ts` → `foo.spec.ts`), run in full, even for a one-line source change. A changed guard, condition, or default silently breaks existing specs that set up the old state (e.g. mocks that never provide the newly required value). When one fails, update the spec to the new behavior (fix its setup, do not loosen assertions), and add a test for the new branch.
+
 ## Warnings (warn only)
 
 Last step. Do not fix anything here. The developer decides.
